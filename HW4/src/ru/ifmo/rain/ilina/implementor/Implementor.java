@@ -12,13 +12,9 @@ import java.util.stream.Collectors;
 public class Implementor implements Impler {
 
     private final static String TAB = "    ";
-
     private final static String SPACE = " ";
-
     private final static String COMMA = ",";
-
     private final static String EOLN = System.lineSeparator();
-
     public Implementor() {}
 
     private static class MethodWrapper {
@@ -247,6 +243,8 @@ public class Implementor implements Impler {
         Impler implementor = new Implementor();
         try {
             implementor.implement(Class.forName(args[0]), Paths.get(args[1]));
+            //implementor.implement(ArrayList.class, Paths.get(""));
+
         } catch (InvalidPathException e) {
             System.out.println("Incorrect path: " + e.getMessage());
         } catch (ClassNotFoundException e) {
@@ -255,4 +253,6 @@ public class Implementor implements Impler {
             System.out.println("An error occurred during implementation: " + e.getMessage());
         }
     }
+
+
 }
