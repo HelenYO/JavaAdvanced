@@ -7,7 +7,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 
-@SuppressWarnings("Duplicates")
+//@SuppressWarnings("Duplicates")
 public class RecursiveWalk {
 
     public static void main(String[] args) {

@@ -206,16 +206,13 @@ public class ArraySet<T> extends AbstractSet<T> implements NavigableSet<T> {
         if(comparator == null) {
             //return new ArraySet<>(comparator);
             //comparator = Comparator.naturalOrder();
-//            if (fromElement instanceof Comparable) {
-//                //comparator = ((Comparable) fromElement).compareTo(toElement);
-//                comparator =  (Comparator<T>)Comparator.naturalOrder();
-//                flag = false;
-//            }
+            if (fromElement instanceof Comparable) {
+                //comparator = ((Comparable) fromElement).compareTo(toElement);
+                comparator =  (Comparator<T>)Comparator.naturalOrder();
+                flag = false;
+            }
         }
 
-//        if(comparator == null || comparator.compare(fromElement, toElement) <= 0) {
-//            throw new IllegalArgumentException();
-//        }
         if (comparator == null) {
             throw new IllegalArgumentException();
         }
@@ -238,8 +235,8 @@ public class ArraySet<T> extends AbstractSet<T> implements NavigableSet<T> {
 
     @Override
     public Comparator<? super T> comparator() {
-        return comparator;
-        //return flag ? comparator : null;
+        //return comparator;
+        return flag ? comparator : null;
     }
 
     public static void main (String[] args) {
