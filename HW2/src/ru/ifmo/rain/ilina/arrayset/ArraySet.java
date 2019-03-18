@@ -2,28 +2,41 @@ package ru.ifmo.rain.ilina.arrayset;
 
 import java.util.*;
 
+import static java.util.Comparator.naturalOrder;
+
+
+//java -cp ./out/production/HW2 -p ./lib:./artifacts -m info.kgeorgiy.java.advanced.arrayset NavigableSet ru.ifmo.rain.ilina.arrayset.ArraySet
+
 
 public class ArraySet<T> extends AbstractSet<T> implements NavigableSet<T> {
     private final List<T> container;
-    private final Comparator<? super T> comparator;
+    private Comparator<? super T> comparator;
+    private boolean flag  = false;
+
+    //private static final DefaultComparator<?> INSTANCE = new DefaultComparator();
 
     public ArraySet() {
         comparator = null;
+        flag = false;
         container = Collections.emptyList();
     }
 
     public ArraySet(Collection<? extends T> other) {
         comparator = null;
+        flag = false;
         container = new ArrayList<>(new TreeSet<>(other));
     }
 
     public ArraySet(Comparator<? super T> cmp) {
+
         container = Collections.emptyList();
         comparator = cmp;
+        flag = !(comparator == null);
     }
 
     public ArraySet(Collection<? extends T> other, Comparator<? super T> cmp) {
         comparator = cmp;
+        flag = !(comparator == null);
         TreeSet<T> tmp = new TreeSet<>(cmp);
         tmp.addAll(other);
         container = new ArrayList<>(tmp);
@@ -31,6 +44,7 @@ public class ArraySet<T> extends AbstractSet<T> implements NavigableSet<T> {
 
     private ArraySet(List<T> arr, Comparator<? super T> cmp) {
         comparator = cmp;
+        flag = !(comparator == null);
         container = arr;
         if (arr instanceof ReversedList) {
             ((ReversedList) arr).reverse();
@@ -49,7 +63,7 @@ public class ArraySet<T> extends AbstractSet<T> implements NavigableSet<T> {
 
     @Override
     public boolean contains(Object o) {
-        return (Collections.binarySearch(container, (T) Objects.requireNonNull(o), comparator) >= 0);
+        return (Collections.binarySearch(container, (T) Objects.requireNonNull(o), comparator) >= 0);     //
     }
 
     private int check(int x) {
@@ -148,8 +162,18 @@ public class ArraySet<T> extends AbstractSet<T> implements NavigableSet<T> {
 
     @Override
     public NavigableSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive) {
-        int l = fromInclusive ? ceilingInd(fromElement) : higherInd(fromElement);
-        int r = toInclusive ? floorInd(toElement) : lowerInd(toElement);
+        int l, r;
+        if (fromInclusive) {
+            l = ceilingInd(fromElement);
+        } else {
+            l = higherInd(fromElement);
+        }
+        if (toInclusive) {
+            r = floorInd(toElement);
+        } else {
+            r = lowerInd(toElement);
+        }
+
         if (l == -1 || r == -1 || l > r) {
             return new ArraySet<>(Collections.emptyList(), comparator);
         } else {
@@ -175,8 +199,32 @@ public class ArraySet<T> extends AbstractSet<T> implements NavigableSet<T> {
 
     @Override
     public SortedSet<T> subSet(T fromElement, T toElement) {
+//        if(container.isEmpty()) {
+//            return new ArraySet<>(comparator);
+//        }
+
+        if(comparator == null) {
+            //return new ArraySet<>(comparator);
+            //comparator = Comparator.naturalOrder();
+//            if (fromElement instanceof Comparable) {
+//                //comparator = ((Comparable) fromElement).compareTo(toElement);
+//                comparator =  (Comparator<T>)Comparator.naturalOrder();
+//                flag = false;
+//            }
+        }
+
+//        if(comparator == null || comparator.compare(fromElement, toElement) <= 0) {
+//            throw new IllegalArgumentException();
+//        }
+        if (comparator == null) {
+            throw new IllegalArgumentException();
+        }
+        if( comparator.compare(fromElement, toElement) > 0) {
+            throw new IllegalArgumentException();
+        }
         return subSet(fromElement, true, toElement, false);
     }
+
 
     @Override
     public SortedSet<T> headSet(T toElement) {
@@ -191,9 +239,15 @@ public class ArraySet<T> extends AbstractSet<T> implements NavigableSet<T> {
     @Override
     public Comparator<? super T> comparator() {
         return comparator;
+        //return flag ? comparator : null;
+    }
+
+    public static void main (String[] args) {
+        SortedSet<String> arr = new ArraySet<>(Arrays.asList("b", "a", "c")).subSet("a", "e");
+        System.out.println(arr.first());
+        System.out.println(arr.last());
     }
 }
-
 
 class ReversedList<E> extends AbstractList<E> {
     private boolean reversed;
