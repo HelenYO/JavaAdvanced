@@ -209,16 +209,76 @@ public class ArraySet<T> extends AbstractSet<T> implements NavigableSet<T> {
             if (fromElement instanceof Comparable) {
                 //comparator = ((Comparable) fromElement).compareTo(toElement);
                 comparator =  (Comparator<T>)Comparator.naturalOrder();
-                flag = false;
+                //comparator = (Comparator<((Comparable)fromElement).getGenericType()>)Comparator.naturalOrder();
+//                flag = true;
+            }
+            else {
+                throw new IllegalArgumentException();
             }
         }
-
-        if (comparator == null) {
-            throw new IllegalArgumentException();
-        }
+//
+//        if (comparator == null) {
+//            throw new IllegalArgumentException();
+//        }
+//
+////
         if( comparator.compare(fromElement, toElement) > 0) {
             throw new IllegalArgumentException();
         }
+
+
+//        int resFrom = Collections.binarySearch(container, Objects.requireNonNull(fromElement), null);
+
+
+        //int r = Collections.binarySearch(container, Objects.requireNonNull(fromElement));
+//        int resFrom = Collections.binarySearch((List<? extends Comparable<? super T>>) container, Objects.requireNonNull(fromElement));
+//        int resTo = Collections.binarySearch((List<? extends Comparable<? super T>>) container, Objects.requireNonNull(toElement));
+//
+//        if(resFrom < 0) {
+//            resFrom = -resFrom - 1;
+//            if (resTo < 0) {
+//                resTo = -resTo - 1;
+//                if (resFrom >= resTo) {
+//                    throw new IllegalArgumentException();
+//                }
+//            } else if(resFrom >= resTo) {
+//                throw new IllegalArgumentException();
+//            }
+//        } else {
+//            if (resTo < 0) {
+//                resTo = -resTo - 1;
+//                if (resFrom >= resTo) {
+//                    throw new IllegalArgumentException();
+//                }
+//            } else if(resFrom >= resTo) {
+//                throw new IllegalArgumentException();
+//            }
+//        }
+
+//        if (resFrom < 0) {
+//            resFrom = -resFrom - 1;
+//        }
+//        if (resTo < 0) {
+//            resTo = -resTo - 1;
+//        }
+//        if (resFrom > resTo) {
+//            throw new IllegalArgumentException();
+//
+//        } else {
+//            if (resFrom == resTo) {
+//                if( comparator.compare(fromElement, toElement) > 0) {
+//                    throw new IllegalArgumentException();
+//                }
+//            }
+//            //todo:: проблема в том, что они могут претендовать на одно и то же место, хотя разные по модулю, тогда придется пихать один из них а потом удалять
+//        }
+//
+//        if ()
+//        int l = ceilingInd(fromElement);
+//        int r = lowerInd(toElement);
+//        if (l > r || r == -1 && l != -1) {
+//            throw  new IllegalArgumentException();
+//        }
         return subSet(fromElement, true, toElement, false);
     }
 
